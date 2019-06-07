@@ -6,35 +6,26 @@ class Topping(models.Model):
     def __str__(self):
         return f"{self.type}"
 
-class Pizza(models.Model):
+class Dish(models.Model):
     type=models.CharField(max_length=64)
     def __str__(self):
         return self.type
 
-class Order(models.Model):
+class Pizza(models.Model):
     SMALL="small"
     LARGE="large"
     SIZE_CHOICES=(
         (SMALL, 'small'),
         (LARGE, 'large'),
     )
-    STATE=(
-        ('pending','pending'),
-        ('processed','processed')
-    )
-    user=models.ForeignKey(
-                User,
-                blank=False,
-                related_name="orders",
-                on_delete=models.CASCADE
-    )
+
     size=models.CharField(
                 max_length=5,
                 choices=SIZE_CHOICES,
                 blank=False
     )
     pizza=models.ForeignKey(
-                Pizza,
+                Dish,
                 blank=False,
                 on_delete=models.CASCADE,
     )
@@ -42,15 +33,36 @@ class Order(models.Model):
                     Topping,
                     blank=True,
     )
+    def __str__(self):
+        toppings=self.toppings.all()
+        return f"{self.size} {self.pizza} with {toppings}"
+
+class Order(models.Model):
+    STATE=(
+        ('pending','pending'),
+        ('processed','processed'),
+    )
+    pizza=models.ForeignKey(
+                Pizza,
+                blank=False,
+                related_name="ordered",
+                on_delete=models.CASCADE,
+    )
+    user=models.ForeignKey(
+                User,
+                blank=False,
+                related_name="orders",
+                on_delete=models.CASCADE,
+    )
     status=models.CharField(
                 max_length=10,
                 choices=STATE,
                 blank=False,
-                default="pending"
+                default="pending",
     )
     def __str__(self):
-        toppings=self.toppings.all()
-        return f"{self.user}: {self.size} {self.pizza} with {toppings} ({self.status})"
+        toppings=self.pizza.toppings.all()
+        return f"{self.user.pk}: {self.pizza} ({self.status})"
 
     def process(self):
         try:
