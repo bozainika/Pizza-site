@@ -1,17 +1,10 @@
 {% extends 'layout/base.html' %}
-{% block title %} {{pizza}} {% endblock %}
+{% block title %} {{dish}} {% endblock %}
 {% block body %}
-<h2>{{pizza}} pizza: </h2>
+<h2>{{dish.name}}: </h2>
 <form action="{% url 'order' %}" method="post">
   {% csrf_token %}
-  <input type="hidden" name="pizza" value="{{pizza.id}}"/>
-  <input type="radio" name="size" value="small">Small
-  <br>
-  <input type="radio" name="size" value="large">Large
-  <br><br>
-  {% for topping in toppings %}
-    <input type="checkbox" name="toppings" value="{{topping.id}}">{{topping}}<br>
-  {% endfor %}
+  <input type="hidden" name="dish" value="{{dish.id}}"/>
   <button type="submit" name="order">Order</button>
 </form>
 {% endblock%}

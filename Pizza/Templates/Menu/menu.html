@@ -1,16 +1,25 @@
 {% extends 'layout/base.html'%}
 {% block title %} Menu {% endblock %}
 {% block body %}
- <h2>Pizzas:</h2>
+ <h2>Menu:</h2>
   <ul>
-    {% for pizza in pizzas %}
-      <li><a href="{% url 'pizza' pizza.id %}">{{pizza}}</a></li>
+    <h2>Pizza</h2>
+    {% for name in pizza_names %}
+      <h3>{{name}}</h3>
+      {% for pizza in Pizzas %}
+        {% if pizza.name == name %}
+          <li><a href="{% url 'dish' pizza.id %}">{{pizza}}</a></li>
+        {% endif %}
+      {% endfor %}
     {% endfor %}
-  </ul>
-  <h2>Toppings:</h2>
-  <ul>
-    {% for topping in toppings %}
-      <li><a href="#">{{topping}}</a></li>
+    <h2>Salads</h2>
+    {% for name in salad_names %}
+      <h3>{{name}}</h3>
+      {% for salad in Salads %}
+        {% if salad.name == name %}
+          <li><a href="{% url 'dish' salad.id %}">{{salad}}</a></li>
+        {% endif %}
+      {% endfor %}
     {% endfor %}
   </ul>
 {%endblock%}
