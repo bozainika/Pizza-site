@@ -5,13 +5,23 @@ from django.urls import reverse
 from django.core import serializers
 # Create your views here.
 def menu (request):
-    context={
-        'pizza_names': Dish.get_dish_names('Pizza'),
-        'salad_names': Dish.get_dish_names('Salad'),
-        'Pizzas': Dish.objects.filter(type=FoodType.objects.get(type="Pizza")).all(),
-        'Salads':Dish.objects.filter(type=FoodType.objects.get(type="Salad")).all(),
-        'orders': Order.objects.all().filter(user=request.user),
-    }
+
+    if(request.user):
+        context={
+            'pizza_names': Dish.get_dish_names('Pizza'),
+            'salad_names': Dish.get_dish_names('Salad'),
+            'Pizzas': Dish.objects.filter(type=FoodType.objects.get(type="Pizza")).all(),
+            'Salads':Dish.objects.filter(type=FoodType.objects.get(type="Salad")).all(),
+            'orders': Order.objects.all().filter(user=request.user),
+            }
+    else:
+        context={
+            'pizza_names': Dish.get_dish_names('Pizza'),
+            'salad_names': Dish.get_dish_names('Salad'),
+            'Pizzas': Dish.objects.filter(type=FoodType.objects.get(type="Pizza")).all(),
+            'Salads':Dish.objects.filter(type=FoodType.objects.get(type="Salad")).all(),
+            'orders': Order.objects.all().filter(user=request.user),
+            }
 
     return render(request,"Menu/menu.html",context)
 
